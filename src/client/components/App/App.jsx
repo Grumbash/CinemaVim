@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
-// import './app.css';
+import './App.scss';
 
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = { os: null };
+    this.state = { username: null };
   }
 
   componentDidMount() {
-    fetch('/api/getOSType')
+    fetch('/api/getUsername')
       .then(res => res.json())
-      .then(OSType => this.setState({ os: os.type }));
+      .then(user => this.setState({ username: user.username }));
   }
 
   render() {
     return (
-      <div>
-        {this.state.os ? (
-          <h1>Hello {this.state.os}</h1>
+      <div className = "container">
+        {this.state.username ? (
+          <h1 className="title">Hello {this.state.username}</h1>
         ) : (
           <h1>Loading.. please wait!</h1>
         )}

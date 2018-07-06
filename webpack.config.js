@@ -5,7 +5,8 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const outputDirectory = 'dist';
 
 module.exports = {
-  entry: './src/client/index.js',
+  mode: 'development',
+  entry: path.join(__dirname, 'src/client/index.jsx'),
   output: {
     path: path.join(__dirname, outputDirectory),
     filename: 'bundle.js'
@@ -13,21 +14,33 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader'
-        }
+        use: ['babel-loader']
       },
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
+        use: [{
+                loader: "style-loader"
+            }, {
+                loader: "css-loader", options: {
+                    sourceMap: true
+                }
+            }, {
+                loader: "sass-loader", options: {
+                    sourceMap: true
+                }
+            }]
       }
     ]
+  },
+  resolve: {
+    extensions: ['*', '.js', '.jsx']
   },
   devServer: {
     port: 3000,
     open: true,
+    overlay:true,
     proxy: {
       '/api': 'http://localhost:8080'
     }
@@ -35,7 +48,7 @@ module.exports = {
   plugins: [
     new CleanWebpackPlugin([outputDirectory]),
     new HtmlWebpackPlugin({
-      template: './public/index.html'
+      template: path.join(__dirname, 'public/index.html'),
     })
   ]
 };
